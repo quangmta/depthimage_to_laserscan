@@ -48,6 +48,7 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <iostream>
 
 namespace depthimage_to_laserscan
 {
@@ -161,9 +162,10 @@ namespace depthimage_to_laserscan
       // find the detltaY
       float deltaY=0;
       int deltaY_ind=0;
+      const T *depth_row_center_offset = reinterpret_cast<const T *>(&depth_msg->data[row_step*cam_model_.cy()]);
       while(deltaY<abs(shiftY))
       {
-        deltaY+= depth_msg->data[depth_msg->width*cam_model_.cy()+deltaY_ind]*constant_y;
+        deltaY+= depth_row_center_offset[deltaY_ind]*constant_y;
         deltaY_ind++;
       }
 
