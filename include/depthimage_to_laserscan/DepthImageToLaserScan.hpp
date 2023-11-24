@@ -161,9 +161,9 @@ namespace depthimage_to_laserscan
       // find the detltaY
       float deltaY=0;
       int deltaY_ind=0;
-      while(deltaY<asb(shiftY))
+      while(deltaY<abs(shiftY))
       {
-        deltaY+= epth_msg->data[depth_msg->width*cam_model_.cy()+deltaY_ind]*constant_y;
+        deltaY+= depth_msg->data[depth_msg->width*cam_model_.cy()+deltaY_ind]*constant_y;
         deltaY_ind++;
       }
 
