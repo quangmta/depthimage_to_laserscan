@@ -34,9 +34,9 @@
 #ifndef DEPTH_IMAGE_TO_LASERSCAN
 #define DEPTH_IMAGE_TO_LASERSCAN
 
-#define shiftX 0.02
-#define shiftY 0.05
-#define shiftZ -0.05
+#define shiftX -0.052
+#define shiftY 0.00
+#define shiftZ 0.027
 
 #include <cmath>
 #include <string>
@@ -160,16 +160,19 @@ namespace depthimage_to_laserscan
       int row_step = depth_msg->step / sizeof(T);
 
       // find the detltaY
-      float deltaY=0;
-      int deltaY_ind=0;
-      const T *depth_row_center_offset = reinterpret_cast<const T *>(&depth_msg->data[row_step*cam_model_.cy()]);
-      while(deltaY<abs(shiftY))
-      {
-        deltaY+= depth_row_center_offset[deltaY_ind]*constant_y;
-        deltaY_ind++;
-      }
+      // float deltaY=0;
+      // int deltaY_ind=0;
+      // const T *depth_row_center_offset = reinterpret_cast<const T *>(&depth_msg->data[row_step*cam_model_.cy()]);
+      // while(deltaY<abs(shiftY))
+      // {
+      //   deltaY+= depth_row_center_offset[deltaY_ind]*constant_y;
+      //   deltaY_ind++;
+      // }
 
-      int offset = static_cast<int>(cam_model.cy()+deltaY_ind - static_cast<double>(scan_height) / 2.0);
+      // int offset = static_cast<int>(cam_model.cy()+deltaY_ind - static_cast<double>(scan_height) / 2.0);
+      
+      float d_real = depth_row[(int)(row_step*cam_model_.cy()+cam_model_.cx())]*0.001;
+      int offset = cam_model_.cy() - shiftZ * cam_model_.fy() / d_real;
       depth_row += offset * row_step; // Offset to center of image
       for (int v = offset; v < offset + scan_height_; v++, depth_row += row_step)
       {
